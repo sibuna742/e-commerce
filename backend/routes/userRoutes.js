@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../model/User'); // Assuming you have a User model
 const authenticateToken = require('../middleware/auth');
+const authorizeAdmin = require('../middleware/authorizeAdmin');
 
-// Get all users
+
+// Get all users text
 router.get('/', async (req, res) => {
   try {
     const users = await User.find();
@@ -14,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // Add a new user
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken,authorizeAdmin, async (req, res) => {
   const { name, email, role, password } = req.body;
 
   try {
@@ -27,7 +29,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Edit an existing user
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authenticateToken,authorizeAdmin, async (req, res) => {
   const { name, email, role } = req.body;
 
   try {
@@ -43,7 +45,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 });
 
 // Delete a user
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticateToken, authorizeAdmin, async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: 'User deleted successfully' });
@@ -51,5 +53,6 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error deleting user' });
   }
 });
+
 
 module.exports = router;

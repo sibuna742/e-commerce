@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
+import { useNavigate } from 'react-router-dom';
 function Cart() {
   const [cart, setCart] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     setCart(storedCart);
@@ -15,8 +16,7 @@ function Cart() {
   };
 
   const checkoutHandler = () => {
-    // Navigate to checkout page (you can use useNavigate from react-router-dom if needed)
-    alert('Checkout functionality coming soon!');
+    navigate("/checkout");
   };
 
   return (
