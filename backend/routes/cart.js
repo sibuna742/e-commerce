@@ -3,9 +3,10 @@ const router = express.Router();
 const authenticateToken = require('../middleware/auth');
 const Cart = require('../models/Cart');
 
-// ➕ Add to Cart
+//Add to Cart
 router.post('/cart', authenticateToken, async (req, res) => {
   const { productId, quantity } = req.body;
+  
   try {
     let cart = await Cart.findOne({ userId: req.user.id });
 
@@ -27,7 +28,7 @@ router.post('/cart', authenticateToken, async (req, res) => {
   }
 });
 
-// 📦 Get User Cart
+// Get User Cart
 router.get('/cart', authenticateToken, async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id }).populate('items.productId');
@@ -38,7 +39,7 @@ router.get('/cart', authenticateToken, async (req, res) => {
   }
 });
 
-// ✏️ Update Quantity
+// Update Quantity
 router.put('/cart', authenticateToken, async (req, res) => {
   const { productId, quantity } = req.body;
   try {
@@ -56,7 +57,7 @@ router.put('/cart', authenticateToken, async (req, res) => {
   }
 });
 
-// ❌ Remove Item
+// Remove Item
 router.delete('/cart/:productId', authenticateToken, async (req, res) => {
   const { productId } = req.params;
   try {
@@ -71,7 +72,7 @@ router.delete('/cart/:productId', authenticateToken, async (req, res) => {
   }
 });
 
-// 🧹 Clear Entire Cart
+// Clear Entire Cart
 router.delete('/cart', authenticateToken, async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id });

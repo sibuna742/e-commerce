@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import api from '../api/api'
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState('products');
@@ -20,10 +21,14 @@ function AdminPage() {
     email: '',
     role: 'user'
   });
+
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  const token = localStorage.getItem('token');
+
+  // console.log(JSON.parse(atob(token.split('.')[1])));
   // Fetch all products
   useEffect(() => {
     const fetchProducts = async () => {
@@ -88,7 +93,12 @@ function AdminPage() {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/users', newUser);
+      // const res = await axios.post('/users', newUser);
+      const res = await axios.post('http://localhost:5000/api/users', newUser, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers([...users, res.data]);
       setNewUser({ name: '', email: '', role: 'user' });
       setShowUserForm(false);
@@ -99,7 +109,11 @@ function AdminPage() {
 
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      await axios.delete(`http://localhost:5000/api/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(users.filter((u) => u._id !== id));
     } catch (err) {
       console.error('Error deleting user:', err);
@@ -114,7 +128,16 @@ function AdminPage() {
   const handleSaveUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
+      // const res = await axios.put(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
+      const res = await axios.put(
+        `http://localhost:5000/api/users/${selectedUser._id}`,
+        selectedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setUsers(users.map((u) => (u._id === selectedUser._id ? res.data : u)));
       closeModal();
     } catch (err) {
@@ -159,7 +182,7 @@ function AdminPage() {
             <h2 className="text-xl font-semibold">Product List</h2>
             <button
               onClick={() => setShowProductForm(!showProductForm)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
               {showProductForm ? 'Close Form' : 'Add Product'}
             </button>
@@ -266,7 +289,7 @@ function AdminPage() {
             <h2 className="text-xl font-semibold">User List</h2>
             <button
               onClick={() => setShowUserForm(!showUserForm)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
               {showUserForm ? 'Close Form' : 'Add User'}
             </button>
@@ -295,7 +318,7 @@ function AdminPage() {
                 value={newUser.role}
                 onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
               >
-                <option value="user">User</option>
+                <option value="customer">Customer</option>
                 <option value="admin">Admin</option>
               </select>
               <button type="submit" className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700">
@@ -344,8 +367,8 @@ function AdminPage() {
       
       {/* Edit Modal for Product/User */}
       {isEditModalOpen && (selectedProduct || selectedUser) && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="fixed inset-0 flex justify-center items-center bg-opacity-50 z-50">
+          <div className="bg-white resize p-6 rounded-lg shadow-lg w-96">
             <h3 className="text-xl font-semibold mb-4">{selectedProduct ? 'Edit Product' : 'Edit User'}</h3>
             <form
               onSubmit={selectedProduct ? handleSaveProduct : handleSaveUser}
@@ -427,7 +450,7 @@ function AdminPage() {
                     value={selectedUser.role}
                     onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
                   >
-                    <option value="user">User</option>
+                    <option value="user">Customer</option>
                     <option value="admin">Admin</option>
                   </select>
                 </>
@@ -437,13 +460,13 @@ function AdminPage() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600"
+                  className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-gray-600"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+                  className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-blue-600"
                 >
                   Save
                 </button>
