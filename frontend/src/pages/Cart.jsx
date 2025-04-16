@@ -54,7 +54,7 @@ function Cart() {
             <div className="text-center">
               <button
                 onClick={checkoutHandler}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg rounded-lg transition"
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg rounded-lg transition"
               >
                 Proceed to Checkout
               </button>

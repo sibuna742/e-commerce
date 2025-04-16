@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // Add a new user
-router.post('/', authenticateToken,authorizeAdmin, async (req, res) => {
+router.post('/', async (req, res) => {
   const { name, email, role, password } = req.body;
 
   try {
