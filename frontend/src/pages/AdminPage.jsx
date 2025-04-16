@@ -93,12 +93,12 @@ function AdminPage() {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      // const res = await axios.post('/users', newUser);
-      const res = await axios.post('http://localhost:5000/api/users', newUser, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.post('http://localhost:5000/api/users', newUser);
+      // const res = await axios.post('http://localhost:5000/api/users', newUser, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
       setUsers([...users, res.data]);
       setNewUser({ name: '', email: '', role: 'user' });
       setShowUserForm(false);
