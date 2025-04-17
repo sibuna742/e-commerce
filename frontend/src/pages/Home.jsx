@@ -4,7 +4,7 @@ import { FaShoppingCart } from 'react-icons/fa'; // For the Add to Cart icon
 
 function Home() {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState(['Electronics', 'Fashion', 'Kichen', 'Toys', 'Sports']);
+  const [categories, setCategories] = useState(['Electronics', 'Fashion', 'Kitchen', 'Toys', 'Sports']);
   const [selectedCategory, setSelectedCategory] = useState('');
 
   // Fetch products from the API
